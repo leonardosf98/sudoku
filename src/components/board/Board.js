@@ -1,14 +1,46 @@
 import { useState, useEffect } from 'react';
 
 function Board() {
-    const initial = [[0,1,2,3,4,5,6,7,8],[9,10,11,12,13,14,15,16,17],[18,19,20,21,22,23,24,25,26],[27,28,29,30,31,32,33,34,35],[36,37,38,39,40,41,42,43,44],[45,46,47,48,49,50,51,52,53],[54,55,56,57,58,59,60,61,62],[63,64,65,66,67,68,69,70,71],[72,73,74,75,76,77,78,79,80]];
+    const EMPTY = null;
 
-    const [sudokuArr] = useState(initial);
+    const initial = [
+        [5, EMPTY, EMPTY, 8, EMPTY, EMPTY, 4, 6, 1],
+        [EMPTY, 4, 9, 5, 1, EMPTY, EMPTY, EMPTY, 8],
+        [1, 8, 2, 3, EMPTY, 4, EMPTY, EMPTY, EMPTY],
+        [2, EMPTY, 4, EMPTY, EMPTY, EMPTY, EMPTY, 1, 5],
+        [1, EMPTY, EMPTY, 4, 7, 5, EMPTY, EMPTY, EMPTY],
+        [5, EMPTY, EMPTY, EMPTY, EMPTY, 1, 8, 4, 6],
+        [EMPTY, EMPTY, 8, 1, 3, 2, EMPTY, EMPTY, EMPTY],
+        [EMPTY, 6, 2, EMPTY, EMPTY, EMPTY, 8, 5, EMPTY],
+        [EMPTY, 1, EMPTY, EMPTY, EMPTY, EMPTY, 2, EMPTY, EMPTY],
+      ];
+      
+    const [sudokuArr, setSudokuArr] = useState(initial);
 
-    const handleInputChange = (event) => {
-        event.target.value = event.target.value.replace(/[^0-9]/);
+    const handleInputChange = (gridIndex, itemIndex, event) => {
+        const { value } = event.target;
+        if((isNaN(parseInt(value)) && value !== '') || value.length > 1) return;
+
+        setSudokuArr((oldState) => {
+            const copyArray = [...oldState];
+            copyArray[gridIndex][itemIndex] = value;            
+            return copyArray;
+        });
+        checkRow(gridIndex,event);
     };
+    function checkRow(gridIndex,event){
+        let value = parseInt(event.target.value);
+        sudokuArr[gridIndex].map((item) => {
+       if (item === value){
+      }})
+    }
+    console.log(sudokuArr[0][2]);
+    function checkGrid(){
 
+    }
+    function checkColumn(){
+
+    }
     function createBorder() {
         const cells = document.querySelectorAll('.cell');
         cells.forEach((cell, index) => {
@@ -34,17 +66,18 @@ function Board() {
     return (
         <table className='square-table'>
             <tbody>
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((row, rIndex) => {
+                {sudokuArr.map((grid, gridIndex) => {
                     return (
-                        <tr key={rIndex}>
-                            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((col, cIndex) => {
+                        <tr key={gridIndex}>
+                            {grid.map((item, itemIndex) => {
                                 return (
-                                    <td key={cIndex}>
+                                    <td key={`${gridIndex}${itemIndex}`}>                                        
                                         <input
                                             className='cell'
-                                            value={sudokuArr[row][col]}
-                                            onInput={handleInputChange}
-                                            maxLength={1}
+                                            value={item ?? ''}
+                                            onChange={function (event) {
+                                                handleInputChange(gridIndex, itemIndex, event)
+                                            }}
                                         />
                                     </td>
                                 );
