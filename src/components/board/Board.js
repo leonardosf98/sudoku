@@ -20,25 +20,35 @@ function Board() {
     const handleInputChange = (gridIndex, itemIndex, event) => {
         const { value } = event.target;
         if((isNaN(parseInt(value)) && value !== '') || value.length > 1) return;
-
         setSudokuArr((oldState) => {
             const copyArray = [...oldState];
-            copyArray[gridIndex][itemIndex] = value;            
+            copyArray[gridIndex][itemIndex] = value;  
+            checkRow(gridIndex,event);
+            checkColumn(gridIndex,itemIndex,event);          
             return copyArray;
         });
-        checkRow(gridIndex,event);
+        
+        
     };
     function checkRow(gridIndex,event){
         let value = parseInt(event.target.value);
         sudokuArr[gridIndex].map((item) => {
        if (item === value){
-      }})
+        event.target.style.backgroundColor = "#f59089";
+        console.log("row")
+      }}) 
     }
-    console.log(sudokuArr[0][2]);
-    function checkGrid(){
-
+ 
+    function checkColumn(gridIndex,itemIndex, event){
+        let value = event.target.value;
+        for(let i = 0; i < sudokuArr.length && i != gridIndex; i++){
+            if (sudokuArr[i][itemIndex] === value){
+            event.target.style.backgroundColor = "#f0f";
+            console.log(value,sudokuArr[i][itemIndex])
+        }} 
+    
     }
-    function checkColumn(){
+    function checkColumna(){
 
     }
     function createBorder() {

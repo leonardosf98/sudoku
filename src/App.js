@@ -1,4 +1,5 @@
 import Board from './components/board/Board';
+import HelpIcon from './components/help-icon/help-icon'
 import './App.css';
 
 function App() {
@@ -6,8 +7,10 @@ function App() {
     <div className="App">
       <header className="App-header">
       <h1 className="App-title">Sudoku</h1>
-      <Board/>
       </header>
+      <main><Board/>
+      <HelpIcon/>
+      </main>
     </div>
   );
 }
