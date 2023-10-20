@@ -1,21 +1,35 @@
 import { useState, useEffect } from "react";
-
+import "./board.css";
 function Board() {
   const EMPTY = null;
 
   const initial = [
-    [5, EMPTY, EMPTY, 8, EMPTY, EMPTY, 4, 6, 1],
-    [EMPTY, 4, 9, 5, 1, EMPTY, EMPTY, EMPTY, 8],
-    [1, 8, 2, 3, EMPTY, 4, EMPTY, EMPTY, EMPTY],
-    [2, EMPTY, 4, EMPTY, EMPTY, EMPTY, EMPTY, 1, 5],
-    [1, EMPTY, EMPTY, 4, 7, 5, EMPTY, EMPTY, EMPTY],
-    [5, EMPTY, EMPTY, EMPTY, EMPTY, 1, 8, 4, 6],
-    [EMPTY, EMPTY, 8, 1, 3, 2, EMPTY, EMPTY, EMPTY],
-    [EMPTY, 6, 2, EMPTY, EMPTY, EMPTY, 8, 5, EMPTY],
-    [EMPTY, 1, EMPTY, EMPTY, EMPTY, EMPTY, 2, EMPTY, EMPTY],
+    [5, 3, EMPTY, EMPTY, 7, EMPTY, EMPTY, EMPTY, EMPTY],
+    [6, EMPTY, EMPTY, 1, 9, 5, EMPTY, EMPTY, EMPTY],
+    [EMPTY, 9, 8, EMPTY, EMPTY, EMPTY, EMPTY, 6, EMPTY],
+    [8, EMPTY, EMPTY, 7, EMPTY, EMPTY, EMPTY, 2, EMPTY],
+    [4, EMPTY, EMPTY, 8, EMPTY, 3, EMPTY, EMPTY, 1],
+    [7, EMPTY, EMPTY, EMPTY, 2, EMPTY, EMPTY, EMPTY, 6],
+    [EMPTY, 6, EMPTY, EMPTY, EMPTY, EMPTY, 2, 8, EMPTY],
+    [EMPTY, EMPTY, EMPTY, 4, 1, 9, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, 8, EMPTY, EMPTY, 7, 9],
+  ];
+
+  const zero = [0];
+  const solution = [
+    [5, 3, 4, 6, 7, 8, 9, 1, 2],
+    [6, 7, 2, 1, 9, 5, 3, 4, 8],
+    [1, 9, 8, 3, 4, 2, 5, 6, 7],
+    [8, 5, 9, 7, 6, 1, 4, 2, 3],
+    [4, 2, 6, 8, 5, 3, 7, 9, 1],
+    [7, 1, 3, 9, 2, 4, 8, 5, 6],
+    [9, 6, 1, 5, 3, 7, 2, 8, 4],
+    [2, 8, 7, 4, 1, 9, 6, 3, 5],
+    [3, 4, 5, 2, 8, 6, 1, 7, 9],
   ];
 
   const [sudokuArr, setSudokuArr] = useState(initial);
+  const [errors, setErrors] = useState(zero);
 
   const handleInputChange = (gridIndex, itemIndex, event) => {
     const { value } = event.target;
@@ -28,33 +42,27 @@ function Board() {
     setSudokuArr((oldState) => {
       const copyArray = [...oldState];
       copyArray[gridIndex][itemIndex] = value;
-      checkRow(gridIndex, event);
-      checkColumn(gridIndex, itemIndex, event);
+      checkSolution(gridIndex, itemIndex, event);
       return copyArray;
     });
   };
-  function checkRow(gridIndex, event) {
+  function checkSolution(gridIndex, itemIndex, event) {
     let value = parseInt(event.target.value);
-    for (const item of sudokuArr[gridIndex]) {
-      if (item === value) {
-        event.target.style.backgroundColor = "#f59089";
-        break;
-      } else {
-        event.target.style.backgroundColor = "#fff";
-      }
+    const item = solution[gridIndex][itemIndex];
+    if (item === value) {
+      event.target.style.backgroundColor = "#5584f2";
+      return;
+    } else if (event.target.value === "") {
+      event.target.style.backgroundColor = "#fff";
+    } else if (event.target.value !== item && value !== "") {
+      event.target.style.backgroundColor = "#f59089";
+      setErrors((oldState) => {
+        const copyArray = [...oldState];
+        copyArray[0] += 1;
+        return copyArray;
+      });
     }
   }
-
-  function checkColumn(gridIndex, itemIndex, event) {
-    let value = event.target.value;
-    for (let i = 0; i < 9; i++) {
-      console.log(sudokuArr[i][itemIndex]);
-      if (sudokuArr[i][itemIndex] == value && gridIndex !== i) {
-        event.target.style.backgroundColor = "#f59089";
-      }
-    }
-  }
-  function checkGrid() {}
   function createBorder() {
     const cells = document.querySelectorAll(".cell");
     cells.forEach((cell, index) => {
@@ -107,6 +115,7 @@ function Board() {
 
   return (
     <table className="square-table">
+      <p>Errors : {errors}</p>
       <tbody>
         {sudokuArr.map((grid, gridIndex) => {
           return (
@@ -115,9 +124,9 @@ function Board() {
                 return (
                   <td key={`${gridIndex}${itemIndex}`}>
                     <input
-                      className="cell"
+                      className="cell not-filled"
                       value={item ?? ""}
-                      onChange={function (event) {
+                      onChange={(event) => {
                         handleInputChange(gridIndex, itemIndex, event);
                       }}
                     />
