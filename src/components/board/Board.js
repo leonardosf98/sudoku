@@ -1,35 +1,40 @@
 import { useState, useEffect } from "react";
 import "./board.css";
 function Board() {
+  function handleClick(event) {}
   const EMPTY = null;
+  const generateSolution = () => {
+    let n = 3;
+    const game = Array(9);
+    for (let i = 0; i < 9; i++) {
+      game[i] = Array(9).fill(null);
+    }
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        game[i][j] = Math.floor(((i * n + i / n + j) % 9) + 1);
+      }
+      console.log(game[i]);
+    }
+    return game;
+  };
+  const initialList = () => {
+    const randomInt = (min, max) => {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    let inicialSudoku = generateSolution();
+    for (let i = 50; i > 0; i--) {
+      let columnToRemove = randomInt(0, 8);
+      let lineToRemove = randomInt(0, 8);
+      inicialSudoku[lineToRemove][columnToRemove] = EMPTY;
+    }
+    return inicialSudoku;
+  };
+  const initial = initialList();
 
-  const initial = [
-    [5, 3, EMPTY, EMPTY, 7, EMPTY, EMPTY, EMPTY, EMPTY],
-    [6, EMPTY, EMPTY, 1, 9, 5, EMPTY, EMPTY, EMPTY],
-    [EMPTY, 9, 8, EMPTY, EMPTY, EMPTY, EMPTY, 6, EMPTY],
-    [8, EMPTY, EMPTY, 7, EMPTY, EMPTY, EMPTY, 2, EMPTY],
-    [4, EMPTY, EMPTY, 8, EMPTY, 3, EMPTY, EMPTY, 1],
-    [7, EMPTY, EMPTY, EMPTY, 2, EMPTY, EMPTY, EMPTY, 6],
-    [EMPTY, 6, EMPTY, EMPTY, EMPTY, EMPTY, 2, 8, EMPTY],
-    [EMPTY, EMPTY, EMPTY, 4, 1, 9, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY, EMPTY, 8, EMPTY, EMPTY, 7, 9],
-  ];
+  const solution = generateSolution();
 
-  const zero = [0];
-  const solution = [
-    [5, 3, 4, 6, 7, 8, 9, 1, 2],
-    [6, 7, 2, 1, 9, 5, 3, 4, 8],
-    [1, 9, 8, 3, 4, 2, 5, 6, 7],
-    [8, 5, 9, 7, 6, 1, 4, 2, 3],
-    [4, 2, 6, 8, 5, 3, 7, 9, 1],
-    [7, 1, 3, 9, 2, 4, 8, 5, 6],
-    [9, 6, 1, 5, 3, 7, 2, 8, 4],
-    [2, 8, 7, 4, 1, 9, 6, 3, 5],
-    [3, 4, 5, 2, 8, 6, 1, 7, 9],
-  ];
-
+  console.log(solution);
   const [sudokuArr, setSudokuArr] = useState(initial);
-  const [errors, setErrors] = useState(zero);
 
   const handleInputChange = (gridIndex, itemIndex, event) => {
     const { value } = event.target;
@@ -50,72 +55,20 @@ function Board() {
     let value = parseInt(event.target.value);
     const item = solution[gridIndex][itemIndex];
     if (item === value) {
-      event.target.style.backgroundColor = "#5584f2";
+      blockInput(event);
       return;
     } else if (event.target.value === "") {
       event.target.style.backgroundColor = "#fff";
     } else if (event.target.value !== item && value !== "") {
       event.target.style.backgroundColor = "#f59089";
-      setErrors((oldState) => {
-        const copyArray = [...oldState];
-        copyArray[0] += 1;
-        return copyArray;
-      });
     }
   }
-  function createBorder() {
-    const cells = document.querySelectorAll(".cell");
-    cells.forEach((cell, index) => {
-      if ((index + 1) % 3 === 0) {
-        cell.style.borderRight = "4px solid black";
-      }
-      if (index === 0 || index % 9 === 0) {
-        cell.style.borderLeft = "4px solid black";
-      }
-      if (index > 71) {
-        cell.style.borderBottom = "4px solid black";
-      }
-      if (
-        index === 0 ||
-        index === 1 ||
-        index === 2 ||
-        index === 3 ||
-        index === 4 ||
-        index === 5 ||
-        index === 6 ||
-        index === 7 ||
-        index === 8 ||
-        index === 27 ||
-        index === 28 ||
-        index === 29 ||
-        index === 30 ||
-        index === 31 ||
-        index === 32 ||
-        index === 33 ||
-        index === 34 ||
-        index === 35 ||
-        index === 54 ||
-        index === 55 ||
-        index === 56 ||
-        index === 57 ||
-        index === 58 ||
-        index === 59 ||
-        index === 60 ||
-        index === 61 ||
-        index === 62
-      ) {
-        cell.style.borderTop = "4px solid black";
-      }
-    });
+  function blockInput(event) {
+    event.target.disabled = true;
+    event.target.style.backgroundColor = "#5584f2";
   }
-
-  useEffect(() => {
-    createBorder();
-  }, []);
-
   return (
     <table className="square-table">
-      <p>Errors : {errors}</p>
       <tbody>
         {sudokuArr.map((grid, gridIndex) => {
           return (
@@ -124,7 +77,7 @@ function Board() {
                 return (
                   <td key={`${gridIndex}${itemIndex}`}>
                     <input
-                      className="cell not-filled"
+                      className="cell"
                       value={item ?? ""}
                       onChange={(event) => {
                         handleInputChange(gridIndex, itemIndex, event);
