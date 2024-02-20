@@ -128,11 +128,13 @@ function Board() {
                 return (
                   <td key={`${gridIndex}${itemIndex}`}>
                     <input
+                      type="number"
                       value={item}
                       className="cell"
                       onChange={(event) => {
                         handleChange(gridIndex, itemIndex, event);
                       }}
+                      on
                     />
                   </td>
                 );
