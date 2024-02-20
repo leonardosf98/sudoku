@@ -67,7 +67,7 @@ function Board() {
 
   const initialSudoku = (solution) => {
     const clonedSolution = JSON.parse(JSON.stringify(solution));
-    const removedElements = 35;
+    const removedElements = 55;
 
     for (let i = 0; i < removedElements; i++) {
       const randomGridIndex = Math.floor(Math.random() * 9);
@@ -117,15 +117,7 @@ function Board() {
     });
     checkSolution(gridIndex, itemIndex, event);
   }
-  function isInitialEmpty(gridIndex, itemIndex) {
-    return (
-      firstRender.length > 0 &&
-      firstRender.length === 9 &&
-      firstRender[gridIndex] &&
-      firstRender[gridIndex].length === 9 &&
-      firstRender[gridIndex][itemIndex] === EMPTY
-    );
-  }
+
   return (
     <table className="square-table">
       <tbody>
@@ -133,21 +125,15 @@ function Board() {
           return (
             <tr key={gridIndex}>
               {grid.map((item, itemIndex) => {
-                const isInitialEmptyCell = isInitialEmpty(gridIndex, itemIndex);
                 return (
                   <td key={`${gridIndex}${itemIndex}`}>
-                    {firstRender[gridIndex][itemIndex] !== null ? (
-                      <div className="cell">{item}</div>
-                    ) : (
-                      <input
-                        value={""}
-                        className="cell"
-                        onChange={(event) => {
-                          handleChange(gridIndex, itemIndex, event);
-                        }}
-                        readOnly={isInitialEmptyCell}
-                      />
-                    )}
+                    <input
+                      value={item}
+                      className="cell"
+                      onChange={(event) => {
+                        handleChange(gridIndex, itemIndex, event);
+                      }}
+                    />
                   </td>
                 );
               })}
