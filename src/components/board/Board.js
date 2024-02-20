@@ -134,7 +134,7 @@ function Board() {
                       onChange={(event) => {
                         handleChange(gridIndex, itemIndex, event);
                       }}
-                      on
+                      onKeyDown={handleChange(gridIndex, itemIndex, event)}
                     />
                   </td>
                 );
