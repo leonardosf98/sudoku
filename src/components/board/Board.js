@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './Board.css';
+import './board.css';
 
 function Board() {
   const EMPTY = null;
