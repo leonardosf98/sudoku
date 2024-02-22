@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import "./board.css";
+import { useState, useEffect } from 'react';
+import './Board.css';
 
 function Board() {
   const EMPTY = null;
@@ -79,21 +79,23 @@ function Board() {
   };
 
   useEffect(() => {
-    setSudokuArr(initialSudoku(solution));
-    setFirstRender(JSON.parse(JSON.stringify(sudokuArr)));
-    console.log(firstRender);
-  }, []);
+    const initialSudokuArr = initialSudoku(solution);
+    setSudokuArr(initialSudokuArr);
+    setFirstRender(
+      initialSudokuArr.map((grid) => grid.map((item) => item !== EMPTY))
+    );
+  }, [solution]);
 
   function checkSolution(gridIndex, itemIndex, event) {
     let value = parseInt(event.target.value);
     const item = solution[gridIndex][itemIndex];
     if (item === value) {
-      event.target.style.backgroundColor = "#4287f5";
+      event.target.style.backgroundColor = '#4287f5';
       return;
     } else if (isNaN(value)) {
-      event.target.style.backgroundColor = "#fff";
-    } else if (value !== item && value !== "") {
-      event.target.style.backgroundColor = "#f59089";
+      event.target.style.backgroundColor = '#fff';
+    } else if (value !== item && value !== '') {
+      event.target.style.backgroundColor = '#f59089';
     }
   }
 
@@ -134,7 +136,10 @@ function Board() {
                       onChange={(event) => {
                         handleChange(gridIndex, itemIndex, event);
                       }}
-                      onKeyDown={handleChange(gridIndex, itemIndex, event)}
+                      readOnly={
+                        firstRender[gridIndex] &&
+                        firstRender[gridIndex][itemIndex]
+                      }
                     />
                   </td>
                 );
