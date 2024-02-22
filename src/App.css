@@ -15,8 +15,8 @@
   border-collapse: collapse;
 }
 .cell {
-  width: 6rem;
-  height: 6rem;
+  width: 65em;
+  height: 5rem;
   font-size: 4em;
   text-align: center;
 }
@@ -25,6 +25,7 @@
   .cell {
     width: 2rem;
     height: 2rem;
+    font-size: 1rem;
   }
 }
 input[type='number']::-webkit-inner-spin-button {
